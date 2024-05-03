@@ -1,0 +1,47 @@
+[
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/Main.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Main.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Main.cpp"
+},
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/ConvertSketch.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/ConvertSketch.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/ConvertSketch.cpp"
+},
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/DrawMap.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/DrawMap.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/DrawMap.cpp"
+},
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/DrawText.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/DrawText.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/DrawText.cpp"
+},
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/Ghost.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Ghost.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Ghost.cpp"
+},
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/GhostManager.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/GhostManager.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/GhostManager.cpp"
+},
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/MapCollision.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/MapCollision.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/MapCollision.cpp"
+},
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/Pacman.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Pacman.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Pacman.cpp"
+},
+{
+  "directory": "/home/robbie/Desktop/Capstone/pacmanCapstone/build",
+  "command": "/usr/bin/c++   -g -o CMakeFiles/Main.dir/Source/Mcts.cpp.o -c /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Mcts.cpp",
+  "file": "/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Mcts.cpp"
+}
+]
