@@ -2,6 +2,8 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
+#include <iostream>
+
 #include "Headers/Global.hpp"
 #include "Headers/Pacman.hpp"
 #include "Headers/MapCollision.hpp"
@@ -11,7 +13,8 @@ Pacman::Pacman() :
 	dead(0),
 	direction(0),
 	energizer_timer(0),
-	position({0, 0})
+	position({0, 0}),
+	autoMove(0)
 {
 	
 }
@@ -52,7 +55,7 @@ void Pacman::draw(bool i_victory, sf::RenderWindow& i_window)
 		{
 			animation_timer++;
 
-			texture.loadFromFile("/home/robbie/Desktop/Capstone/Pacman-Main/Source/Resources/Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
+			texture.loadFromFile("/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Resources/Images/PacmanDeath" + std::to_string(CELL_SIZE) + ".png");
 
 			sprite.setTexture(texture);
 			sprite.setTextureRect(sf::IntRect(CELL_SIZE * frame, 0, CELL_SIZE, CELL_SIZE));
@@ -67,7 +70,7 @@ void Pacman::draw(bool i_victory, sf::RenderWindow& i_window)
 	}
 	else
 	{
-		texture.loadFromFile("/home/robbie/Desktop/Capstone/Pacman-Main/Source/Resources/Images/Pacman" + std::to_string(CELL_SIZE) + ".png");
+		texture.loadFromFile("/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Resources/Images/Pacman" + std::to_string(CELL_SIZE) + ".png");
 
 		sprite.setTexture(texture);
 		sprite.setTextureRect(sf::IntRect(CELL_SIZE * frame, CELL_SIZE * direction, CELL_SIZE, CELL_SIZE));
@@ -110,7 +113,7 @@ void Pacman::set_position(short i_x, short i_y)
 	position = {i_x, i_y};
 }
 
-void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map)
+void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, int move)
 {
 	std::array<bool, 4> walls{};
 
@@ -119,45 +122,18 @@ void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGH
 	walls[2] = map_collision(0, 0, position.x - PACMAN_SPEED, position.y, i_map);
 	walls[3] = map_collision(0, 0, position.x, PACMAN_SPEED + position.y, i_map);
 
-	if (true == sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-	{
-		if (false == walls[0]) //You can't turn in this direction if there's a wall there.
-		{
-			direction = 0;
-		}
+
+	if(walls[move] == false){
+		direction = move;
 	}
 
-	if (true == sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-	{
-		if (false == walls[1])
-		{
-			direction = 1;
-		}
-	}
-
-	if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-	{
-		if (false == walls[2])
-		{
-			direction = 2;
-		}
-	}
-
-	if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-	{
-		if (0 == walls[3])
-		{
-			direction = 3;
-		}
-	}
-
-	if (0 == walls[direction])
+	if (false == walls[direction])
 	{
 		switch (direction)
 		{
 			case 0:
 			{
-				position.x += PACMAN_SPEED;
+				position.x += PACMAN_SPEED; //the speed is how many pixels pacman should move 
 
 				break;
 			}
@@ -189,6 +165,8 @@ void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGH
 		position.x = PACMAN_SPEED - CELL_SIZE;
 	}
 
+
+	//handeling pacman picking up pellets and energizers
 	if (1 == map_collision(1, 0, position.x, position.y, i_map)) //When Pacman eats an energizer...
 	{
 		//He becomes energized!
@@ -202,5 +180,19 @@ void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGH
 
 Position Pacman::get_position()
 {
+	//position is precise pixels 
 	return position;
 }
+
+int Pacman::keyboardMovement(){
+		if (true == sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) return 0;
+		if (true == sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) return 1;
+		if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) return 2;
+		if (1 == sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) return 3;
+
+		
+		return direction;
+}
+
+
+

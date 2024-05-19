@@ -72,6 +72,7 @@ bool map_collision(bool i_collect_pellets, bool i_use_door, short i_x, short i_y
 				}
 				else if (Cell::Pellet == i_map[x][y])
 				{
+					
 					i_map[x][y] = Cell::Empty;
 				}
 			}

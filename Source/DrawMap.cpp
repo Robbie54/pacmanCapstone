@@ -12,7 +12,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 	sf::Sprite sprite;
 
 	sf::Texture texture;
-	texture.loadFromFile("/home/robbie/Desktop/Capstone/Pacman-Main/Source/Resources/Images/Map" + std::to_string(CELL_SIZE) + ".png");
+	texture.loadFromFile("/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Resources/Images/Map" + std::to_string(CELL_SIZE) + ".png");
 
 	sprite.setTexture(texture);
 
@@ -23,6 +23,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 			sprite.setPosition(static_cast<float>(CELL_SIZE * a), static_cast<float>(CELL_SIZE * b));
 
 			//We just crop out what we need from the texture.
+			// std::cout << i_map[a][b] << " ";
 			switch (i_map[a][b])
 			{
 				case Cell::Door:
@@ -33,6 +34,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 
 					break;
 				}
+				
 				case Cell::Energizer:
 				{
 					sprite.setTextureRect(sf::IntRect(CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
@@ -51,6 +53,7 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 				}
 				case Cell::Wall:
 				{
+
 					bool down = 0;
 					bool left = 0;
 					bool right = 0;
@@ -101,6 +104,16 @@ void draw_map(const std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, 
 					sprite.setTextureRect(sf::IntRect(CELL_SIZE * (down + 2 * (left + 2 * (right + 2 * up))), 0, CELL_SIZE, CELL_SIZE));
 
 					i_window.draw(sprite);
+					break;
+				}
+				case Cell::Marker:
+				{	
+
+					sprite.setTextureRect(sf::IntRect(3 * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
+
+					i_window.draw(sprite);
+
+					break;
 				}
 			}
 		}

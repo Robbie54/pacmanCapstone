@@ -19,13 +19,14 @@ Ghost::Ghost(unsigned char i_id) :
 
 bool Ghost::pacman_collision(const Position& i_pacman_position)
 {
-	//I used the ADVANCED collision checking algorithm.
-	//Only experts like me can understand this.
+	//collision checking algorithm.
+	
 	if (position.x > i_pacman_position.x - CELL_SIZE && position.x < CELL_SIZE + i_pacman_position.x)
 	{
 		if (position.y > i_pacman_position.y - CELL_SIZE && position.y < CELL_SIZE + i_pacman_position.y)
-		{
-			return 1;
+		{	
+			//ghost pacman collision check //!
+			return 0;
 		}
 	}
 
@@ -37,7 +38,7 @@ float Ghost::get_target_distance(unsigned char i_direction)
 	short x = position.x;
 	short y = position.y;
 
-	//We'll imaginarily move the gohst in a given direction and calculate the distance to the target.
+	//We'll imaginarily move the s  in a given direction and calculate the distance to the target.
 	switch (i_direction)
 	{
 		case 0:
@@ -77,7 +78,7 @@ void Ghost::draw(bool i_flash, sf::RenderWindow& i_window)
 	sf::Sprite face;
 
 	sf::Texture texture;
-	texture.loadFromFile("/home/robbie/Desktop/Capstone/Pacman-Main/Source/Resources/Images/Ghost" + std::to_string(CELL_SIZE) + ".png");
+	texture.loadFromFile("/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Resources/Images/Ghost" + std::to_string(CELL_SIZE) + ".png");
 
 	body.setTexture(texture);
 	body.setPosition(position.x, position.y);
@@ -129,7 +130,7 @@ void Ghost::draw(bool i_flash, sf::RenderWindow& i_window)
 	else if (1 == frightened_mode)
 	{
 		body.setColor(sf::Color(36, 36, 255));
-		//The face remains the same regardless of where the gohst is going right now.
+		//The face remains the same regardless of where the ghost  is going right now.
 		face.setTextureRect(sf::IntRect(4 * CELL_SIZE, CELL_SIZE, CELL_SIZE, CELL_SIZE));
 
 		if (1 == i_flash && 0 == body_frame % 2)
@@ -161,8 +162,8 @@ void Ghost::draw(bool i_flash, sf::RenderWindow& i_window)
 void Ghost::reset(const Position& i_home, const Position& i_home_exit)
 {
 	movement_mode = 0;
-	//Everyone can use the door except the red gohst.
-	//Because I hate the red gohst.
+	//Everyone can use the door except the red ghost .
+	//Because I hate the red ghost .
 	use_door = 0 < id;
 
 	direction = 0;
@@ -188,17 +189,17 @@ void Ghost::switch_mode()
 
 void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, Ghost& i_ghost_0, Pacman& i_pacman)
 {
-	//Can the gohst move?
+	//Can the ghost  move?
 	bool move = 0;
 	
-	//If this is greater than 1, that means that the gohst has reached the intersection.
+	//If this is greater than 1, that means that the ghost  has reached the intersection.
 	//We don't consider the way back as an available way.
 	unsigned char available_ways = 0;
 	unsigned char speed = GHOST_SPEED;
 
 	std::array<bool, 4> walls{};
 
-	//Here the gohst starts and stops being frightened.
+	//Here the ghost  starts and stops being frightened.
 	if (0 == frightened_mode && i_pacman.get_energizer_timer() == ENERGIZER_DURATION / pow(2, i_level))
 	{
 		frightened_speed_timer = GHOST_FRIGHTENED_SPEED;
@@ -210,7 +211,7 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 		frightened_mode = 0;
 	}
 
-	//I used the modulo operator in case the gohst goes outside the grid.
+	//I used the modulo operator in case the ghost  goes outside the grid.
 	if (2 == frightened_mode && 0 == position.x % GHOST_ESCAPE_SPEED && 0 == position.y % GHOST_ESCAPE_SPEED)
 	{
 		speed = GHOST_ESCAPE_SPEED;
@@ -225,15 +226,15 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 
 	if (1 != frightened_mode)
 	{
-		//I used 4 because using a number between 0 and 3 will make the gohst move in a direction it can't move.
+		//I used 4 because using a number between 0 and 3 will make the ghost  move in a direction it can't move.
 		unsigned char optimal_direction = 4;
 
-		//The gohst can move.
+		//The ghost  can move.
 		move = 1;
 
 		for (unsigned char a = 0; a < 4; a++)
 		{
-			//Gohsts can't turn back! (Unless they really have to)
+			//ghost s can't turn back! (Unless they really have to)
 			if (a == (2 + direction) % 4)
 			{
 				continue;
@@ -257,7 +258,7 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 
 		if (1 < available_ways)
 		{
-			//When the gohst is at the intersection, it chooses the optimal direction.
+			//When the ghost  is at the intersection, it chooses the optimal direction.
 			direction = optimal_direction;
 		}
 		else
@@ -280,7 +281,7 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 
 		if (0 == frightened_speed_timer)
 		{
-			//The gohst can move after a certain number of frames.
+			//The ghost  can move after a certain number of frames.
 			move = 1;
 
 			frightened_speed_timer = GHOST_FRIGHTENED_SPEED;
@@ -321,7 +322,7 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 	}
 
 
-	//If the gohst can move, we move it.
+	//If the ghost  can move, we move it.
 	if (1 == move)
 	{
 		switch (direction)
@@ -351,7 +352,7 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 		}
 
 		//Warping.
-		//When the gohst leaves the map, we move it to the other side.
+		//When the ghost  leaves the map, we move it to the other side.
 		if (-CELL_SIZE >= position.x)
 		{
 			position.x = CELL_SIZE * MAP_WIDTH - speed;
@@ -364,11 +365,11 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 
 	if (1 == pacman_collision(i_pacman.get_position()))
 	{
-		if (0 == frightened_mode) //When the gohst is not frightened and collides with Pacman, we kill Pacman.
+		if (0 == frightened_mode) //When the ghost  is not frightened and collides with Pacman, we kill Pacman.
 		{
 			i_pacman.set_dead(1);
 		}
-		else //Otherwise, the gohst starts running towards the house.
+		else //Otherwise, the ghost  starts running towards the house.
 		{
 			use_door = 1;
 
@@ -381,15 +382,15 @@ void Ghost::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT
 
 void Ghost::update_target(unsigned char i_pacman_direction, const Position& i_ghost_0_position, const Position& i_pacman_position)
 {
-	if (1 == use_door) //If the gohst can use the door.
+	if (1 == use_door) //If the ghost  can use the door.
 	{
 		if (position == target)
 		{
-			if (home_exit == target) //If the gohst has reached the exit.
+			if (home_exit == target) //If the ghost  has reached the exit.
 			{
 				use_door = 0; //It can no longer use the door.
 			}
-			else if (home == target) //If the gohst has reached its home.
+			else if (home == target) //If the ghost  has reached its home.
 			{
 				frightened_mode = 0; //It stops being frightened.
 
@@ -401,7 +402,7 @@ void Ghost::update_target(unsigned char i_pacman_direction, const Position& i_gh
 	{
 		if (0 == movement_mode) //The scatter mode
 		{
-			//Each gohst goes to the corner it's assigned to.
+			//Each ghost  goes to the corner it's assigned to.
 			switch (id)
 			{
 				case 0:
@@ -432,13 +433,13 @@ void Ghost::update_target(unsigned char i_pacman_direction, const Position& i_gh
 		{
 			switch (id)
 			{
-				case 0: //The red gohst will chase Pacman.
+				case 0: //The red ghost  will chase Pacman.
 				{
 					target = i_pacman_position;
 
 					break;
 				}
-				case 1: //The pink gohst will chase the 4th cell in front of Pacman.
+				case 1: //The pink ghost  will chase the 4th cell in front of Pacman.
 				{
 					target = i_pacman_position;
 
@@ -470,7 +471,7 @@ void Ghost::update_target(unsigned char i_pacman_direction, const Position& i_gh
 
 					break;
 				}
-				case 2: //The blue gohst.
+				case 2: //The blue ghost .
 				{
 					target = i_pacman_position;
 
@@ -501,14 +502,14 @@ void Ghost::update_target(unsigned char i_pacman_direction, const Position& i_gh
 						}
 					}
 
-					//We're sending a vector from the red gohst to the second cell in front of Pacman.
+					//We're sending a vector from the red ghost  to the second cell in front of Pacman.
 					//Then we're doubling it.
 					target.x += target.x - i_ghost_0_position.x;
 					target.y += target.y - i_ghost_0_position.y;
 
 					break;
 				}
-				case 3: //The orange gohst will chase Pacman until it gets close to him. Then it'll switch to the scatter mode.
+				case 3: //The orange ghost  will chase Pacman until it gets close to him. Then it'll switch to the scatter mode.
 				{
 					//Using the Pythagoras' theorem again.
 					if (CELL_SIZE * GHOST_3_CHASE <= sqrt(pow(position.x - i_pacman_position.x, 2) + pow(position.y - i_pacman_position.y, 2)))

@@ -1,6 +1,6 @@
 #pragma once
 
-//I won't explain this.
+//each cell is 16x16 pixels 
 constexpr unsigned char CELL_SIZE = 16;
 //This too.
 constexpr unsigned char FONT_HEIGHT = 16;
@@ -33,31 +33,45 @@ constexpr unsigned char PACMAN_SPEED = 2;
 constexpr unsigned char SCREEN_RESIZE = 2;
 
 //This is in frames. So don't be surprised if the numbers are too big.
-constexpr unsigned short CHASE_DURATION = 1024;
-constexpr unsigned short ENERGIZER_DURATION = 512;
-constexpr unsigned short FRAME_DURATION = 16667;
-constexpr unsigned short GHOST_FLASH_START = 64;
-constexpr unsigned short LONG_SCATTER_DURATION = 512;
-constexpr unsigned short SHORT_SCATTER_DURATION = 256;
+constexpr unsigned int CHASE_DURATION = 1024;
+constexpr unsigned int ENERGIZER_DURATION = 512;
+constexpr unsigned int FRAME_DURATION = 16667;
+constexpr unsigned int GHOST_FLASH_START = 64;
+constexpr unsigned int LONG_SCATTER_DURATION = 512;
+constexpr unsigned int SHORT_SCATTER_DURATION = 256;
 
-//I used enums! I rarely use them, so enjoy this historical moment.
+//Defines if Door,empty,energizer,peller or wall
 enum Cell
 {
 	Door,
 	Empty,
 	Energizer,
 	Pellet,
-	Wall
+	Wall,
+	Marker
+
 };
 
 struct Position
 {
 	short x;
 	short y;
-
-	//See? I'm an expert.
-	bool operator==(const Position& i_position)
-	{
-		return this->x == i_position.x && this->y == i_position.y;
-	}
+	//allows you to compare Positions directly
+	// bool operator==(const Position& i_position)
+	// {
+	// 	return this->x == i_position.x && this->y == i_position.y;
+	// }
+	 bool operator==(const Position& other) const {
+        return x == other.x && y == other.y;
+    }
+    bool operator!=(const Position& other) const {
+        return !(*this == other);
+    }
+	bool operator<(const Position& other) const {
+		if (x != other.x) return x < other.x;
+		return y < other.y;
+    }
+	Position operator+(const Position& other) const {
+        return {short(x + other.x), short(y + other.y)};
+    }
 };

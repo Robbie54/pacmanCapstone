@@ -8,6 +8,7 @@ class Pacman
 	bool dead;
 
 	unsigned char direction;
+	int autoMove;
 
 	
 	unsigned short animation_timer;
@@ -30,7 +31,11 @@ public:
 	void set_animation_timer(unsigned short i_animation_timer);
 	void set_dead(bool i_dead);
 	void set_position(short i_x, short i_y);
-	void update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map);
+
+	void update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH>& i_map, int move);
 
 	Position get_position();
+	int keyboardMovement();
+
+
 };

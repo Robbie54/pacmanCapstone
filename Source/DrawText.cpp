@@ -14,7 +14,7 @@ void draw_text(bool i_center, unsigned short i_x, unsigned short i_y, const std:
 	sf::Sprite character_sprite;
 
 	sf::Texture font_texture;
-	font_texture.loadFromFile("/home/robbie/Desktop/Capstone/Pacman-Main/Source/Resources/Images/Font.png");
+	font_texture.loadFromFile("/home/robbie/Desktop/Capstone/pacmanCapstone/Source/Resources/Images/Font.png");
 
 	//There are 96 characters in the font texture.
 	character_width = font_texture.getSize().x / 96;

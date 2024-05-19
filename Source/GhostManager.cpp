@@ -2,6 +2,7 @@
 #include <cmath>
 #include <SFML/Graphics.hpp>
 
+
 #include "Headers/Global.hpp"
 #include "Headers/Pacman.hpp"
 #include "Headers/Ghost.hpp"
@@ -92,5 +93,6 @@ std::array<Position, 4> GhostManager::getAllPositions(){
 		positions[i] = ghost.get_position();
 		i++;
 	}
+	
 	return positions;
 }

@@ -11,6 +11,7 @@
 #include "Headers/ConvertSketch.hpp"
 #include "Headers/DrawMap.hpp"
 #include "Headers/MapCollision.hpp"
+#include "Headers/Mcts.hpp"
 
 #include <iostream>
 
@@ -52,6 +53,7 @@ int main()
 		" ################### "
 	};
 
+	//This is the map 
 	std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map{};
 
 	//Initial ghost positions.
@@ -68,16 +70,23 @@ int main()
 
 	Pacman pacman;
 
+	
+
 	//Generating a random seed.
 	srand(static_cast<unsigned>(time(0)));
 
 	map = convert_sketch(map_sketch, ghost_positions, pacman);
+
+	//initialised once map is made
+	Mcts mcts(map);
 
 	ghost_manager.reset(level, ghost_positions);
 
 	//Get the current time and store it in a variable.
 	previous_time = std::chrono::steady_clock::now();
 
+
+//#################### Start Game loop ######################
 	while (1 == window.isOpen())
 	{
 
@@ -110,17 +119,21 @@ int main()
 			{
 				game_won = true;
 
-				//updates pacman position and checks for keyboard input 
-				pacman.update(level, map);
+				//checks for keyboard input 
+				int move = pacman.keyboardMovement(); 
+
+				//updates pacman position 
+				pacman.update(level, map, move);
 				
 
 				ghost_manager.update(level, map, pacman);
 
-				//We're checking every cell in the map.
+				//We're checking every cell in the map. 
 				for (const std::array<Cell, MAP_HEIGHT>& column : map)
 				{
 					for (const Cell& cell : column)
 					{
+						
 						if (Cell::Pellet == cell) //And if at least one of them has a pellet.
 						{
 							game_won = 0; //The game is not yet won.
@@ -153,6 +166,8 @@ int main()
 					//After each win we reduce the duration of attack waves and energizers.
 					level++;
 				}
+
+				
 				
 				map = convert_sketch(map_sketch, ghost_positions, pacman);
 
@@ -173,11 +188,38 @@ int main()
 
 					ghost_manager.draw(GHOST_FLASH_START >= pacman.get_energizer_timer(), window); //draws the ghosts 
 
-					draw_text(0, 0, CELL_SIZE * MAP_HEIGHT, "Level: " + std::to_string(1 + level), window);
+					draw_text(0, 0, CELL_SIZE * MAP_HEIGHT, "Level "  + std::to_string(1 + level), window);
+					
 				}
 
 				pacman.draw(game_won, window);	//draws pacman in game
 
+
+				std::array<Position, 4> allGhostPos = ghost_manager.getAllPositions();
+				
+	
+
+				// std::cout << pacman.get_position().x/CELL_SIZE << " " << pacman.get_position().y/CELL_SIZE << std::endl;
+					
+				
+				// for(int i = 0; i < 4; i++){
+				// 	std::cout << "Ghost: " << i << " " << allGhostPos[i].x/CELL_SIZE << " " << allGhostPos[i].y/CELL_SIZE << std::endl;	
+				// }	
+
+					
+					std::vector<Position> p = mcts.getShortestPath(pacman.get_position(), allGhostPos[0]);
+					
+					
+					
+					// for(auto i : p){
+					// 	map[i.x][i.y] = Marker;
+					// }
+				 	// draw_map(map,window);
+				// mcts.selection(allGhostPos, pacman.get_position(), map);
+				
+				// std::cout << mcts.getShortestPathDistance(pacman.get_position(), allGhostPos[0]) << std::endl;
+
+				
 
 
 				if (1 == pacman.get_animation_over())
