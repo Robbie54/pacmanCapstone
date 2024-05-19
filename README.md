@@ -1,4 +1,5 @@
-# Pacman
-Remake of the original Pac-Man game.
+# Pacman MCTS 
 
-Here's the video explaining how I did it: https://youtu.be/vC0d1rDmPBs
+
+
+Initial pacman remake code from; https://youtu.be/vC0d1rDmPBs
