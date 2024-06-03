@@ -8,6 +8,10 @@
 #include "Headers/Pacman.hpp"
 #include "Headers/MapCollision.hpp"
 
+
+
+
+
 Pacman::Pacman() :
 	animation_over(0),
 	dead(0),
@@ -131,25 +135,25 @@ void Pacman::update(unsigned char i_level, std::array<std::array<Cell, MAP_HEIGH
 	{
 		switch (direction)
 		{
-			case 0:
+			case 0: //RIGHT
 			{
 				position.x += PACMAN_SPEED; //the speed is how many pixels pacman should move 
 
 				break;
 			}
-			case 1:
+			case 1: //UP
 			{
 				position.y -= PACMAN_SPEED;
 
 				break;
 			}
-			case 2:
+			case 2: //LEFT
 			{
 				position.x -= PACMAN_SPEED;
 
 				break;
-			}
-			case 3:
+			} 
+			case 3: //DOWN
 			{
 				position.y += PACMAN_SPEED;
 			}

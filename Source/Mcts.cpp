@@ -15,30 +15,198 @@
 #include "Headers/Ghost.hpp"
 #include "Headers/GhostManager.hpp"
 
-Mcts::Mcts(std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map) : map(map) {}
 
-//mcts func 
-int Mcts::selection(Position pacmanPosition, std::array<Position, 4> ghostPositions){
-    Position pacmanGridPos; 
-    pacmanGridPos.x = pacmanPosition.x/CELL_SIZE;
-    pacmanGridPos.y = pacmanPosition.y/CELL_SIZE;
-    
 
-    int pathLengths = 1000; 
-    move = 0;
-    //check which squares are free 
-    for(int i = 0; i < 4; i++){
-        if(availableMoves[i] == true){
-            int path = getShortestPathDistance(pacmanPosition + directions[i], ghostPositions[0]);
-            if(path < pathLengths) { 
-                pathLengths = path;
-                move = i; 
-            }
-             
+using namespace std;
+
+
+// queue<MCTS_move *> *MctsPacman_state::actions_to_try() const {
+//     queue<MCTS_move *> *Q = new queue<MCTS_move *>();
+//     //need pacman pos 
+//     //and map positions
+//     //and ghost positions
+        
+//             Q->push(new MctsPacman_move(gridPosX, gridPosY));
+        
+//     return Q;
+// }
+
+
+// MctsPacman_state::MctsPacman_state() : MCTS_state() {}
+
+
+//copy constructor 
+MctsPacman_state::MctsPacman_state(const MctsPacman_state &other) : MCTS_state(other), pacmanCurrentGridPos(other.pacmanCurrentGridPos), ghostCurrentGridPositions(other.ghostCurrentGridPositions), map(other.map) {
+
+}
+
+//initialise constructor 
+MctsPacman_state::MctsPacman_state(const Position pacmanCurrentGridPos, const std::array<Position, 4> ghostCurrentGridPositions, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map)
+    : MCTS_state(), pacmanCurrentGridPos(pacmanCurrentGridPos), ghostCurrentGridPositions(ghostCurrentGridPositions), map(map) {
+    // Additional initialization code if needed
+}
+
+queue<MCTS_move *> *MctsPacman_state::actions_to_try() const {
+    queue<MCTS_move *> *Q = new queue<MCTS_move *>();
+    array<bool,4> moves = getAvaliableMoves();
+
+    //add to the queue moves 
+    for(int i = 0; i < moves.size(); i++){
+        if(moves[i] == true){
+            Q->push(new MctsPacman_move(pacmanCurrentGridPos.x + directions[i].x, pacmanCurrentGridPos.y + directions[i].y));
         }
     }
 
-    std::cout << "Best path is " << move << " "; 
+    return Q; 
+}
+
+
+
+array<bool,4> MctsPacman_state::getAvaliableMoves() const{
+    array<bool,4> availableMoves = {false, false, false, false};
+
+    for (int i = 0; i < 4; ++i) {
+        const auto& dir = directions[i];
+            Position neighbor{
+                static_cast<short>(pacmanCurrentGridPos.x + dir.x), 
+                static_cast<short>(pacmanCurrentGridPos.y + dir.y)
+            };
+
+            // std::cout << "neighbor " << neighbor.x << " " << neighbor.y << std::endl;
+            // std::cout << "map " << map[neighbor.y][neighbor.x] << std::endl;
+
+            // Check boundaries and if the cell is passable (not an obstacle)
+            if (neighbor.x >= 0 && neighbor.x < MAP_WIDTH && 
+                neighbor.y >= 0 && neighbor.y < MAP_HEIGHT &&
+                (map[neighbor.x][neighbor.y] != Cell::Wall))
+                {                
+                   availableMoves[i] = true;
+  
+                }       
+    }
+
+    return availableMoves;
+}
+
+MCTS_state *MctsPacman_state::next_state(const MCTS_move *move) const{
+    MctsPacman_move *m = (MctsPacman_move * ) move; //this is a c style cast. If move doesn't actually point to a mctsPacman_move object, undefined behavior can occur.
+    MctsPacman_state *new_state = new MctsPacman_state(*this);
+
+    switch (new_state->map[m->gridPosX][m->gridPosY]) {//a different way to write an if kinda
+        //perhaps next state updates pacman and ghost pos and map 
+        case Cell::Empty: 
+        case Cell::Pellet: //if pellet need to update map to be empty for pacman move 
+        case Cell::Energizer: //same also needs to update ghost state 
+            new_state->pacmanCurrentGridPos.x = m->gridPosX;
+            new_state->pacmanCurrentGridPos.y = m->gridPosY;
+            new_state->map[m->gridPosX][m->gridPosY] = Cell::Empty;
+            break;
+        case Cell::Door: 
+            new_state->pacmanCurrentGridPos.x = m->gridPosX;
+            new_state->pacmanCurrentGridPos.y = m->gridPosY;
+            break;
+        case Cell::Wall:
+            cerr << "Warning: Illegal move (" << m->gridPosX << ", " << m->gridPosY << ")" << endl;
+            cout << "see next state func not sure if cerr is working" << endl;
+            break;
+    }
+
+    return new_state;
+}
+
+double MctsPacman_state::rollout() const{
+    return 1; 
+}
+
+
+bool MctsPacman_state::is_terminal() const{
+    //if pacmanPos == any ghost pos thats terminal 
+    //also if a level is complete thats terminal 
+    //quoridor uses a check_winner function //this allows you to check who won in rollout rather then just returning a bool that somone did 
+    char winner = checkWinner(); 
+
+    return winner == 'P' || winner == 'G';  
+}
+
+char MctsPacman_state::checkWinner() const {
+    for(const auto ghostPos : ghostCurrentGridPositions){
+        if(ghostPos == pacmanCurrentGridPos){
+            return 'G';
+        }
+    }
+    //I will want to speed this up in the future 
+    //currenlty thinking of just having a pellet counter and decreasing each tiem one is removed 
+    bool game_won = 1;
+    for (const std::array<Cell, MAP_HEIGHT>& column : map) {
+        for (const Cell& cell : column)
+        {
+            
+            if (Cell::Pellet == cell) //And if at least one of them has a pellet.
+            {
+                game_won = 0; //The game is not yet won.
+
+                break;
+            }
+        }
+
+        if (0 == game_won)
+        {
+            break;
+        }
+    }
+
+				
+    if(game_won == 1){
+        return 'P';
+    }
+    else {
+        return ' ';
+    }
+}
+
+
+
+
+
+Mcts::Mcts(std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map) : map(map){}
+
+//mcts func 
+int Mcts::run(Position pacmanPosition, std::array<Position, 4> ghostPositions){
+    pacmanCurrentGridPos.x = pacmanPosition.x/CELL_SIZE;
+    pacmanCurrentGridPos.y = pacmanPosition.y/CELL_SIZE;
+
+    std::array<Position, 4> ghostGridPositions; 
+    for(int i = 0; i <ghostGridPositions.size(); i++){
+        ghostGridPositions[i].x = ghostPositions[i].x/CELL_SIZE;
+        ghostGridPositions[i].y = ghostPositions[i].y/CELL_SIZE;
+    }
+    
+    bool done; 
+
+    MCTS_state *state = new MctsPacman_state(pacmanCurrentGridPos, ghostGridPositions, map); 
+    //
+
+    
+    int pathLengths = INT32_MAX; 
+
+    move = -1;
+    //available moves should be right, up left , down . 0  1 2 3 
+    int oppositeDirection[] = {2, 3, 0, 1}; // For directions 0, 1, 2, 3 respectively
+    //check which squares are free 
+   if(checkIfJunction(pacmanPosition) || checkIfCorner(pacmanPosition)){
+        for(int i = 0; i < 4; i++){
+            if(availableMoves[i] == true ){
+                int path = getShortestPathDistance(pacmanPosition + directions[i], ghostPositions[0]);
+                if(path < pathLengths) { 
+                    pathLengths = path;
+                    move = i; 
+                } 
+            }
+        }
+   }
+   
+
+    // std::cout << "Best path is " << move << " "; 
     // if(map[pacmanGridPos.x][pacmanGridPos.y] == 3 || map[pacmanGridPos.x][pacmanGridPos.y+1] == 1){ //down
     //         std::cout << "Hi " << map[pacmanGridPos.x][pacmanGridPos.y+1] << std::endl;
     // }
@@ -49,71 +217,19 @@ int Mcts::selection(Position pacmanPosition, std::array<Position, 4> ghostPositi
 
 bool Mcts::checkIfJunction(Position pos){
     //what if it comes to a corner before a junction 
-    int count = 0;
-    Position gridPos; 
-    gridPos.x = pos.x/CELL_SIZE;
-    gridPos.y  = pos.y/CELL_SIZE;
-
-    availableMoves = {false, false, false, false};
-
-  for (int i = 0; i < directions.size(); ++i) {
-        const auto& dir = directions[i];
-            Position neighbor{
-                static_cast<short>(gridPos.x + dir.x), 
-                static_cast<short>(gridPos.y + dir.y)
-            };
-
-            // std::cout << "neighbor " << neighbor.x << " " << neighbor.y << std::endl;
-            // std::cout << "map " << map[neighbor.y][neighbor.x] << std::endl;
-
-            // Check boundaries and if the cell is passable (not an obstacle)
-            if (neighbor.x >= 0 && neighbor.x < MAP_WIDTH && 
-                neighbor.y >= 0 && neighbor.y < MAP_HEIGHT &&
-                (map[neighbor.x][neighbor.y] != Cell::Wall))
-                {
-                    //availible moves in here 
-                    // std::cout << "count " << neighbor.x << " " << neighbor.y << " The cell is: " << map[neighbor.x][neighbor.y] << " moves " << i << std::endl;
-                    availableMoves[i] = true;
-                    count++;
-                }
+    int count = updateAvailableMoves(pos);
 
             if(count >= 3){
                 // std::cout << "its a junction " << count << std::endl;
                 return true;
             }      
-    }
+    
     return false; 
 }
 
 bool Mcts::checkIfCorner(Position pos){
     //what if it comes to a corner before a junction 
-    int count = 0;
-    Position gridPos; 
-    gridPos.x = pos.x/CELL_SIZE;
-    gridPos.y  = pos.y/CELL_SIZE;
-
- availableMoves = {false, false, false, false};
-
-  for (int i = 0; i < directions.size(); ++i) {
-        const auto& dir = directions[i];
-            Position neighbor{
-                static_cast<short>(gridPos.x + dir.x), 
-                static_cast<short>(gridPos.y + dir.y)
-            };
-
-            // std::cout << "neighbor " << neighbor.x << " " << neighbor.y << std::endl;
-            // std::cout << "map " << map[neighbor.y][neighbor.x] << std::endl;
-
-            // Check boundaries and if the cell is passable (not an obstacle)
-            if (neighbor.x >= 0 && neighbor.x < MAP_WIDTH && 
-                neighbor.y >= 0 && neighbor.y < MAP_HEIGHT &&
-                (map[neighbor.x][neighbor.y] != Cell::Wall))
-                {
-                    //availible moves in here 
-                    // std::cout << "count " << neighbor.x << " " << neighbor.y << " The cell is: " << map[neighbor.x][neighbor.y] << " moves " << i << std::endl;
-                    availableMoves[i] = true;
-                    count++;
-                }
+     updateAvailableMoves(pos);
 
            for(int i =0; i<availableMoves.size()-1; i++){
                 if(availableMoves[i] && availableMoves[i+1]){
@@ -121,12 +237,13 @@ bool Mcts::checkIfCorner(Position pos){
                     return true;
                 }
            }   
+
            if(availableMoves[3] && availableMoves[0]) { 
             std::cout << "available moves are " << 3 << " and " << 0<< std::endl;
             return true;
             }
 
-    }
+    
     return false; 
 }
 
@@ -217,8 +334,6 @@ std::vector<Position> Mcts::getShortestPath(Position pos, Position pos2){
                 (map[neighbor.x][neighbor.y] != Cell::Wall) 
                 && !visited[neighbor]) {
 
-                // std::cout << " hi " << std::endl;
-
                 queue.push(neighbor);
                 visited[neighbor] = true;
                 came_from[neighbor] = current;
@@ -255,3 +370,50 @@ return path;
 // expansion 
 // rollout 
 // backpropogation
+
+
+int Mcts::updateAvailableMoves(Position pos){
+    int count = 0;
+    Position gridPos; 
+    gridPos.x = pos.x/CELL_SIZE;
+    gridPos.y  = pos.y/CELL_SIZE;
+
+    availableMoves = {false, false, false, false};
+
+    for (int i = 0; i < directions.size(); ++i) {
+            const auto& dir = directions[i];
+                Position neighbor{
+                    static_cast<short>(gridPos.x + dir.x), 
+                    static_cast<short>(gridPos.y + dir.y)
+                };
+
+                // std::cout << "neighbor " << neighbor.x << " " << neighbor.y << std::endl;
+                // std::cout << "map " << map[neighbor.y][neighbor.x] << std::endl;
+
+                // Check boundaries and if the cell is passable (not an obstacle)
+                if (neighbor.x >= 0 && neighbor.x < MAP_WIDTH && 
+                    neighbor.y >= 0 && neighbor.y < MAP_HEIGHT &&
+                    (map[neighbor.x][neighbor.y] != Cell::Wall))
+                    {
+                        //availible moves in here 
+                        // std::cout << "count " << neighbor.x << " " << neighbor.y << " The cell is: " << map[neighbor.x][neighbor.y] << std::endl;
+                        int a = 0; //right
+                        //need to convert moves to pacman relative
+                        //available moves should be right, up left , down . 0  1 2 3 
+                        if(i == 1){
+                            a = 2; //left
+                        }
+                        else if(i == 2){
+                            a = 3;
+                        }
+                        else if(i == 3){
+                            a = 1;
+                        }
+                        availableMoves[a] = true;
+                        count++;
+                        
+                    }       
+    }
+
+    return count;
+}

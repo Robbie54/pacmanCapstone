@@ -123,11 +123,25 @@ CMakeFiles/Main.dir/Source/Mcts.cpp.o: \
  /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/9/bits/functional_hash.h \
- /usr/include/c++/9/bits/basic_string.tcc /usr/include/SFML/Graphics.hpp \
- /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp \
- /usr/include/SFML/Config.hpp /usr/include/SFML/System/Clock.hpp \
- /usr/include/SFML/System/Export.hpp /usr/include/SFML/System/Time.hpp \
- /usr/include/SFML/System/Err.hpp /usr/include/c++/9/ostream \
+ /usr/include/c++/9/bits/basic_string.tcc /usr/include/c++/9/vector \
+ /usr/include/c++/9/bits/stl_construct.h \
+ /usr/include/c++/9/bits/stl_uninitialized.h \
+ /usr/include/c++/9/bits/stl_vector.h \
+ /usr/include/c++/9/bits/stl_bvector.h /usr/include/c++/9/bits/vector.tcc \
+ /usr/include/c++/9/queue /usr/include/c++/9/deque \
+ /usr/include/c++/9/bits/stl_deque.h /usr/include/c++/9/bits/deque.tcc \
+ /usr/include/c++/9/bits/stl_heap.h /usr/include/c++/9/bits/stl_queue.h \
+ /usr/include/c++/9/bits/uses_allocator.h /usr/include/c++/9/cmath \
+ /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
+ /usr/include/c++/9/iostream /usr/include/c++/9/ostream \
  /usr/include/c++/9/ios /usr/include/c++/9/bits/ios_base.h \
  /usr/include/c++/9/bits/locale_classes.h \
  /usr/include/c++/9/bits/locale_classes.tcc \
@@ -142,7 +156,12 @@ CMakeFiles/Main.dir/Source/Mcts.cpp.o: \
  /usr/include/x86_64-linux-gnu/c++/9/bits/ctype_inline.h \
  /usr/include/c++/9/bits/locale_facets.tcc \
  /usr/include/c++/9/bits/basic_ios.tcc \
- /usr/include/c++/9/bits/ostream.tcc \
+ /usr/include/c++/9/bits/ostream.tcc /usr/include/c++/9/istream \
+ /usr/include/c++/9/bits/istream.tcc /usr/include/SFML/Graphics.hpp \
+ /usr/include/SFML/Window.hpp /usr/include/SFML/System.hpp \
+ /usr/include/SFML/Config.hpp /usr/include/SFML/System/Clock.hpp \
+ /usr/include/SFML/System/Export.hpp /usr/include/SFML/System/Time.hpp \
+ /usr/include/SFML/System/Err.hpp \
  /usr/include/SFML/System/FileInputStream.hpp \
  /usr/include/SFML/System/InputStream.hpp \
  /usr/include/SFML/System/NonCopyable.hpp \
@@ -152,8 +171,7 @@ CMakeFiles/Main.dir/Source/Mcts.cpp.o: \
  /usr/include/SFML/System/String.hpp /usr/include/SFML/System/Utf.hpp \
  /usr/include/c++/9/algorithm /usr/include/c++/9/bits/stl_algo.h \
  /usr/include/c++/9/bits/algorithmfwd.h \
- /usr/include/c++/9/bits/stl_heap.h /usr/include/c++/9/bits/stl_tempbuf.h \
- /usr/include/c++/9/bits/stl_construct.h \
+ /usr/include/c++/9/bits/stl_tempbuf.h \
  /usr/include/c++/9/bits/uniform_int_dist.h /usr/include/c++/9/limits \
  /usr/include/c++/9/locale /usr/include/c++/9/bits/locale_facets_nonio.h \
  /usr/include/c++/9/ctime \
@@ -163,11 +181,8 @@ CMakeFiles/Main.dir/Source/Mcts.cpp.o: \
  /usr/include/c++/9/bits/locale_facets_nonio.tcc \
  /usr/include/c++/9/bits/locale_conv.h \
  /usr/include/c++/9/bits/unique_ptr.h /usr/include/c++/9/tuple \
- /usr/include/c++/9/bits/uses_allocator.h \
  /usr/include/c++/9/bits/invoke.h /usr/include/SFML/System/Utf.inl \
- /usr/include/c++/9/iterator /usr/include/c++/9/istream \
- /usr/include/c++/9/bits/istream.tcc \
- /usr/include/c++/9/bits/stream_iterator.h \
+ /usr/include/c++/9/iterator /usr/include/c++/9/bits/stream_iterator.h \
  /usr/include/SFML/System/String.inl /usr/include/SFML/System/Thread.hpp \
  /usr/include/SFML/System/Thread.inl \
  /usr/include/SFML/System/ThreadLocal.hpp \
@@ -185,10 +200,7 @@ CMakeFiles/Main.dir/Source/Mcts.cpp.o: \
  /usr/include/SFML/Window/Joystick.hpp \
  /usr/include/SFML/Window/Keyboard.hpp /usr/include/SFML/Window/Mouse.hpp \
  /usr/include/SFML/Window/Sensor.hpp /usr/include/SFML/Window/Touch.hpp \
- /usr/include/SFML/Window/VideoMode.hpp /usr/include/c++/9/vector \
- /usr/include/c++/9/bits/stl_uninitialized.h \
- /usr/include/c++/9/bits/stl_vector.h \
- /usr/include/c++/9/bits/stl_bvector.h /usr/include/c++/9/bits/vector.tcc \
+ /usr/include/SFML/Window/VideoMode.hpp \
  /usr/include/SFML/Window/Window.hpp \
  /usr/include/SFML/Window/WindowHandle.hpp \
  /usr/include/SFML/Window/WindowStyle.hpp \
@@ -224,6 +236,8 @@ CMakeFiles/Main.dir/Source/Mcts.cpp.o: \
  /usr/include/SFML/Graphics/Text.hpp \
  /usr/include/SFML/Graphics/VertexBuffer.hpp \
  /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/Global.hpp \
+ /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/Mcts.hpp \
+ /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/../../MonteCarloTreeSearch-main/mcts/include/state.h \
  /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/Pacman.hpp \
  /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/Ghost.hpp \
  /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/GhostManager.hpp

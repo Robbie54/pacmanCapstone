@@ -1,5 +1,6 @@
 #pragma once
 
+
 class Pacman
 {
 	//This is used for the death animation.
@@ -39,3 +40,5 @@ public:
 
 
 };
+
+

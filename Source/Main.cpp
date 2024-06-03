@@ -15,6 +15,10 @@
 
 #include <iostream>
 
+using std::cout;
+using std::endl;
+
+
 int main()
 {
 	//Is the game won?
@@ -119,16 +123,25 @@ int main()
 			{
 				game_won = true;
 
-				//checks for keyboard input 
-				int move = pacman.keyboardMovement(); 
+				std::array<Position, 4> allGhostPos = ghost_manager.getAllPositions();
+
+				//I want to run mcts here but im not sure if i should just use a function or make a class object
+				int move = mcts.run(pacman.get_position(), allGhostPos);
+
+				//checks for keyboard input
+				
+				// int move = pacman.keyboardMovement(); 
 
 				//updates pacman position 
+				
+				std::cout << "pacman update moving " << move << std::endl;
+			
 				pacman.update(level, map, move);
 				
 
 				ghost_manager.update(level, map, pacman);
 
-				//We're checking every cell in the map. 
+				//We're checking every cell in the map. To check if level is complete
 				for (const std::array<Cell, MAP_HEIGHT>& column : map)
 				{
 					for (const Cell& cell : column)
@@ -168,7 +181,7 @@ int main()
 				}
 
 				
-				
+				//This only happens when game is being reset 
 				map = convert_sketch(map_sketch, ghost_positions, pacman);
 
 				ghost_manager.reset(level, ghost_positions);
@@ -176,7 +189,7 @@ int main()
 				pacman.reset();
 			}
 
-			//I don't think anything needs to be explained here.
+
 			if (FRAME_DURATION > lag)
 			{
 				window.clear();
@@ -195,7 +208,6 @@ int main()
 				pacman.draw(game_won, window);	//draws pacman in game
 
 
-				std::array<Position, 4> allGhostPos = ghost_manager.getAllPositions();
 				
 	
 
@@ -207,7 +219,7 @@ int main()
 				// }	
 
 					
-					std::vector<Position> p = mcts.getShortestPath(pacman.get_position(), allGhostPos[0]);
+					// std::vector<Position> p = mcts.getShortestPath(pacman.get_position(), allGhostPos[0]);
 					
 					
 					

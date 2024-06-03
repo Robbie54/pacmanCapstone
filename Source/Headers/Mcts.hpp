@@ -1,18 +1,100 @@
 #pragma once 
 
 
-//needs pacman positions 
-//ghost positions 
-//map -> availible moves, pellets left 
 
-//I think the first thing to do is get available moves and move pacman as far away as possible from ghosts
+//derived classes need parent file path in .h file not cpp
+#include "../../MonteCarloTreeSearch-main/mcts/include/state.h"
 
 
-//run mcts at each junction 
-//follow path until chosen junction is met 
+
+
+/* 
+state class 
+- needs the state of map walls, pellets , energizers, ghosts and pacman
+
+*/
+class MctsPacman_state : public MCTS_state{
+    private:
+        Position pacmanCurrentGridPos;
+        std::array<Position, 4> ghostCurrentGridPositions;
+        std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map;
+
+        //right //up //left //down 
+        std::array<Position, 4> directions = {{{1, 0}, {0, 1}, {-1, 0}, {-1, 0}}}; 
+
+
+
+    //functions to consider 
+    //pacman.get_dead // is pacman alive? //kinda like is_terminal
+    //
+
+	public: 
+        // MctsPacman_state(); //default constructor can initialise board 
+        MctsPacman_state(const MctsPacman_state &other); //constructor to initialise using another state
+        MctsPacman_state(const Position pacmanCurrentGridPos, const std::array<Position, 4> ghostCurrentGridPositions, std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map);
+
+
+        /**
+         * @brief creates a queue of all available moves to pacman essentially getting available moves
+         * @return a queue of MCts_move objects 
+        */
+        queue<MCTS_move *> *actions_to_try() const override;
+
+        /**
+         * @brief  get available moves for pacman in current pos 
+         * Not sure if its needed currenlty only actions to try uses it could just put in there 
+         * @return moves in bool format - right(0), up(1), left(2), down(3) 
+        */
+       
+        std::array<bool, 4> getAvaliableMoves() const; 
+
+        /**
+         * @brief gets the next state of the game updating pacman and ghosts by one position with mcts_move 
+         * @todo probally need to add ghost positions to mcts_move 
+         * @return returns tne next state so pacman, ghost positions and map updates 
+         * */ 
+
+        MCTS_state *next_state(const MCTS_move *move) const override;
+        
+        double rollout() const override;
+        bool is_terminal() const override;
+
+        
+        /**
+         * @brief checks if either ghost has won or pacman has cleared level 
+         * @todo implement 
+         * @return 'P' for pacman complete level, 'G' for ghost hit pacman and ' ' no win
+        */
+        char checkWinner() const;
+
+        //only here bc its pure virtual not sure if i need it at all 
+        bool player1_turn() const {
+            return true; 
+        };   
+
+};
+
+
+
+struct MctsPacman_move : public MCTS_move { 
+    
+    //permove might also need the ghost positions 
+
+    int gridPosX; 
+    int gridPosY;
+
+	MctsPacman_move(int x, int y) : gridPosX(x), gridPosY(y) {};
+	bool operator==(const MCTS_move& other) const override {
+        const MctsPacman_move &o = (const MctsPacman_move&) other;
+        return gridPosX == o.gridPosX && gridPosX == o.gridPosY;
+    }  
+};
+
+
 
 class Mcts {
 
+    
     enum Direction {
         Up,
         Down,
@@ -22,16 +104,22 @@ class Mcts {
 
     int move;
 
-    // Directions for moving in the grid 
-    std::array<Position, 4> directions = {{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}}; //right //left //down //up
+    Position pacmanCurrentGridPos; 
+
+
+    // Directions for moving in the grid //this is old
+    std::array<Position, 4> directions = {{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}}; //right //left //down //up 
     // std::array<Position, 4> directions = {{{1, 0}, {0, -1}, {1, 0}, {0, 1}}};
-    std::array<bool, 4> availableMoves; //1 is available //up right down left //currently reading like 0 is right 1 is left, 2 down, 3up
+    std::array<bool, 4> availableMoves; //copying pacman moves 
     std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map{};
     
     public:
         Mcts(std::array<std::array<Cell, MAP_HEIGHT>, MAP_WIDTH> map);
 
-        int selection(Position pacmanPosition, std::array<Position, 4> ghostPositions);
+
+
+        //currenlty map is just static for each runthough
+        int run(Position pacmanPosition, std::array<Position, 4> ghostPositions);
         
 
         //distance from one square to another //might be useful to implement a euclid and manhattan distance 
@@ -44,9 +132,8 @@ class Mcts {
         bool checkIfCorner(Position pos);
         int cornerMove();
 
-
-
-
+        //old (in state now)
+        int updateAvailableMoves(Position pos);
 
 };
 

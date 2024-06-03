@@ -233,4 +233,8 @@ CMakeFiles/Main.dir/Source/Main.cpp.o: \
  /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/ConvertSketch.hpp \
  /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/DrawMap.hpp \
  /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/MapCollision.hpp \
- /usr/include/c++/9/iostream
+ /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/Mcts.hpp \
+ /home/robbie/Desktop/Capstone/pacmanCapstone/Source/Headers/../../MonteCarloTreeSearch-main/mcts/include/state.h \
+ /usr/include/c++/9/queue /usr/include/c++/9/deque \
+ /usr/include/c++/9/bits/stl_deque.h /usr/include/c++/9/bits/deque.tcc \
+ /usr/include/c++/9/bits/stl_queue.h /usr/include/c++/9/iostream
